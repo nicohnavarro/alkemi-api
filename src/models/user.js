@@ -1,45 +1,34 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
-const mongoosePaginate = require("mongoose-paginate-v2");
-const Schema = mongoose.Schema;
+const { DataTypes } = require("sequelize");
+const sequelize = require("../loaders/sequelize");
 
-const userSchema = new Schema(
+const User = sequelize.define(
+  "Users",
   {
-    name: {
-      type: String,
-      required: [true, "Name required"],
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-    lastName: {
-      type: String,
-      required: [true, "Last Name required"],
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
-      type: String,
-      required: [true, "Email required"],
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
-      index: true,
-    },
-    dateOfBirth: Date,
-    password: {
-      type: String,
-      required: [true, "Password required"],
-    },
-    role: {
-      type: String,
-      required: [true],
-      default: "USER_ROLE",
-      enum: ["USER_ROLE", "ADMIN_ROLE"],
     },
     enable: {
-      type: Boolean,
-      required: [true],
-      default: true,
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
   },
-  { timestamps: true }
+  {}
 );
 
-userSchema.plugin(uniqueValidator, { message: "already exist in the DB" });
-userSchema.plugin(mongoosePaginate);
-
-module.exports = mongoose.model("users", userSchema);
+module.exports = User;

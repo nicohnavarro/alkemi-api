@@ -6,6 +6,7 @@ const logger = require("./logger");
 const startServer = async () => {
   try {
     await sequelize.authenticate();
+    sequelize.sync({ alter: true });
     logger.info("Database Loaded and Connected");
 
     const server = new ExpressServer();
