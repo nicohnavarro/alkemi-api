@@ -1,9 +1,9 @@
-const ExpressServer = require("./server/expressServer");
-const sequelize = require("./sequelize");
-const config = require("../config");
-const logger = require("./logger");
+import { ExpressServer } from "./server/expressServer.js";
+import sequelize from "./sequelize/index.js";
+import { port } from "../config/index.js";
+import logger from "./logger/index.js";
 
-const startServer = async () => {
+const startLoader = async () => {
   try {
     await sequelize.authenticate();
     sequelize.sync({ alter: true });
@@ -13,11 +13,11 @@ const startServer = async () => {
     logger.info("Express Loaded");
     server.start();
     logger.info("#############################################");
-    logger.info(`Server listening on port: ${config.port}`);
+    logger.info(`Server listening on port: ${port}`);
     logger.info("#############################################");
   } catch (err) {
     console.error("Unable to connect to the database!", err);
   }
 };
 
-module.exports = startServer;
+export default startLoader;

@@ -1,5 +1,8 @@
+import startLoader  from "./loaders/index.js";
+
+
 const startServer = async ()=>{
-  require('./loaders')();
+  startLoader();
 }
 
 startServer();

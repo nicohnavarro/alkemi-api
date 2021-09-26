@@ -7,4 +7,4 @@ class Success {
 
 }
 
-module.exports = Success;
+export default Success;

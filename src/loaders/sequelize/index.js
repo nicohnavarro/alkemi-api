@@ -1,14 +1,14 @@
-const { Sequelize } = require("sequelize");
-const config = require("../../config/index");
+import { Sequelize } from "sequelize";
+import { database } from "../../config/index.js";
 
 const sequelize = new Sequelize(
-  config.database.name,
-  config.database.username,
-  config.database.password,
+  database.name,
+  database.username,
+  database.password,
   {
-    host: config.database.host,
+    host: database.host,
     dialect: "mysql",
   }
 );
 
-module.exports = sequelize;
+export default sequelize;

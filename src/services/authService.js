@@ -1,24 +1,58 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-const userService = require('./userService');
-const AppError = require('../errors/appError');
+import { compare } from 'bcrypt';
+import JWT  from 'jsonwebtoken';
+import { auth } from '../config/index.js';
+import { findByEmail, findById } from './userService.js';
+import AppError from '../errors/appError.js';
 
 const login = async(email,password) => {
   try{
-    const user = await userService.findByEmail(email);
+    const user = await findByEmail(email);
 
     if(!user){
-      throw new AppError('Authentication failed!',400)
+      throw new AppError('User not found!',401)
     }
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    if(!user.enable){
+      throw new AppError('User disabled!',401)
+    }
+
+    const validPassword = await compare(password, user.password);
     
     if(!validPassword){
-      throw new AppError('Authentication failed',401);
+      throw new AppError('Authentication failed, Password invalid',401);
     }
 
-    const token = _encrypt(user._id);
+    const token = _encrypt(user.id);
+
+    return { 
+      token,
+      user:user.name,
+      role:user.role
+    }
+  }catch(err){
+    throw err;
+  }
+}
+
+const register = async(name,username,email,password) => {
+  try{
+    const user = await findByEmail(email);
+
+    if(!user){
+      throw new AppError('User not found!',401)
+    }
+
+    if(!user.enable){
+      throw new AppError('User disabled!',401)
+    }
+
+    const validPassword = await compare(password, user.password);
+    
+    if(!validPassword){
+      throw new AppError('Authentication failed, Password invalid',401);
+    }
+
+    const token = _encrypt(user.id);
 
     return { 
       token,
@@ -37,12 +71,12 @@ const validToken = async(token) => {
     }
     let id;
     try{
-      const obj = jwt.verify(token,config.auth.secret);
+      const obj =  JWT.verify(token,auth.secret);
       id = obj.id;
     }catch(verifyErr){
       throw new AppError('Authentication failed, Error token',402);
     }
-    const user = await userService.findById(id);
+    const user = await findById(id);
     if(!user){
       throw new AppError('Authentication failed, Invalid token',401);
     }
@@ -63,12 +97,13 @@ const validRole = (user, ...roles) => {
   return true;
 }
 
-_encrypt = (id) => {
-  return jwt.sign({ id }, config.auth.secret,{ expiresIn:config.auth.ttl});
+const _encrypt = (id) => {
+  return JWT.sign({ id }, auth.secret,{ expiresIn:auth.ttl});
 }
 
-module.exports = {
+export {
   login,
+  register,
   validToken,
   validRole
 }

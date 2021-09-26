@@ -1,4 +1,4 @@
-const UserRepository = require('../repositories/userRepository');
+import UserRepository from '../repositories/userRepository.js';
 const repository = new UserRepository();
 
 const findAll = async() => {
@@ -29,7 +29,7 @@ const remove = async(id) => {
   return await repository.remove(id);
 }
 
-module.exports = {
+export {
   findAll,
   findWithPagination,
   findById,

@@ -1,34 +1,45 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../loaders/sequelize");
-
+import pkg from "sequelize";
+import sequelize from "../loaders/sequelize/index.js";
+import { ADMIN_ROLE, USER_ROLE } from "../constants/index.js";
+const { DataTypes } = pkg;
 const User = sequelize.define(
-  "Users",
+  "users",
   {
     username: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
     },
     enable: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
+    role: {
+      type: DataTypes.ENUM,
+      values: [ADMIN_ROLE, USER_ROLE],
+      defaultValue: USER_ROLE,
+    },
   },
-  {}
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["username", "email"],
+      },
+    ],
+  }
 );
 
-module.exports = User;
+export default User;

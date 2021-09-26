@@ -1,6 +1,6 @@
-const express = require('express');
-const userService = require('../services/userService');
-const Success = require('../handlers/successHandler');
+import express from 'express';
+import { findAll, findWithPagination, findById, save, update, remove } from '../services/userService.js';
+import Success from '../handlers/successHandler.js';
 
 /**
  *
@@ -9,7 +9,7 @@ const Success = require('../handlers/successHandler');
  */
 const getAllUsers = async (req,res,next)=>{
   try{
-    const users = await userService.findAll();
+    const users = await findAll();
     res.status(200).json(new Success(users)); 
   }catch(err){
     next(err);
@@ -18,7 +18,7 @@ const getAllUsers = async (req,res,next)=>{
 
 const getUsersWithPagination = async (req,res,next) => {
   try{
-    const users = await userService.findWithPagination(req.query.filter,req.query.options);
+    const users = await findWithPagination(req.query.filter,req.query.options);
     res.status(200).json(new Success(users));
   }catch(err){
     next(err);
@@ -28,7 +28,7 @@ const getUsersWithPagination = async (req,res,next) => {
 const getUserById = async (req,res,next) => {
   try{
     const { id } =req.params;
-    const user = await userService.findById(id);
+    const user = await findById(id);
     res.status(200).json(new Success(user));
   }catch(err){
     next(err);
@@ -38,20 +38,19 @@ const getUserById = async (req,res,next) => {
 const createUser = async (req,res,next) =>{
   try{
     let user = req.body;
-    user = await userService.save(user); 
+    user = await save(user); 
     res.status(201).json(new Success(user));
   }catch(err){
     next(err);
   }
-  
 }
 
 const updateUser = async (req,res,next)=>{
   try{
     const { id } =req.params;
     let user = req.body;
-    user._id = id;
-    user = await userService.update(id,user);
+    user.id = id;
+    user = await update(id,user);
     res.json(new Success(user));
   }catch(err){
     next(err);
@@ -62,14 +61,14 @@ const updateUser = async (req,res,next)=>{
 const deleteUser = async (req,res,next)=>{
   try{
     const {id} = req.params;
-    const user = await userService.remove(id);
+    const user = await remove(id);
     res.json(new Success(user));
   }catch(err){
     next(err);
   }
 }
 
-module.exports = {
+export {
   getAllUsers,
   getUsersWithPagination,
   getUserById,

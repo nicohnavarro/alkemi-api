@@ -1,15 +1,13 @@
-const winston = require('winston');
-const config = require('../../config');
+import winston from "winston";
+import {log} from "../../config/index.js";
 
 const transports = [];
-transports.push(
-  new winston.transports.Console(),
-);
+transports.push(new winston.transports.Console());
 
 const LoggerInstance = winston.createLogger({
-  level: config.log.level,
+  level: log.level,
   format: winston.format.simple(),
-  transports
-})
+  transports,
+});
 
-module.exports = LoggerInstance;
+export default LoggerInstance;

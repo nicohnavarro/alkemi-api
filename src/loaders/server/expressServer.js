@@ -1,92 +1,81 @@
-const express = require('express');
-const path = require('path');
-const swaggerUi = require('swagger-ui-express');
-const morgan = require('morgan');
-const config = require('../../config');
-const logger = require('../logger');
-const swaggerDocument = require('../swagger/swagger.json');
-class ExpressServer {
+import express, { json } from "express";
+import { join } from "path";
+import { serve, setup } from "swagger-ui-express";
+import morgan from "morgan";
+import { port, api, swagger } from "../../config/index.js";
+import swaggerDocument from '../swagger/swagger.json';
+import authRoutes from '../../routes/auth.js'
+import userRoutes from '../../routes/users.js'
 
-  constructor(){  
+export class ExpressServer {
+  constructor() {
     this.app = express();
-    this.port = config.port;
-    this.basePath = config.api.prefix;
-    
-    this._middlewares(); 
+    this.port = port;
+    this.basePath = api.prefix;
+
+    this._middlewares();
     this._swaggerConfig();
-    
+
     this._routes();
 
     this._notFound();
     this._errorHandler();
   }
 
-  _middlewares(){
-    this.app.use(express.json());
-    this.app.use(morgan('tiny'));
+  _middlewares() {
+    this.app.use(json());
+    this.app.use(morgan("tiny"));
   }
 
-  _routes(){
-    
-    this.app.head('/status',(req,res)=>{
+  _routes() {
+    this.app.head("/status", (req, res) => {
       res.status(200).end();
     });
 
-    this.app.get('/report',(req,res)=>{
-      res.sendFile(
-        path.join(__dirname + '../../../../postman/report.html'
-      ));
+    this.app.get("/report", (req, res) => {
+      res.sendFile(join(__dirname + "../../../../postman/report.html"));
     });
 
+    this.app.use(`${this.basePath}/auth`, authRoutes);
 
-    this.app.use(`${this.basePath}/auth`,
-       require('../../routes/auth'));
-
-    this.app.use(`${this.basePath}/users`,
-      require('../../routes/users'));
+    this.app.use(`${this.basePath}/users`,userRoutes);
   }
 
-  _notFound(){
-    this.app.use((req,res,next)=>{
-      const err = new Error('Not Found');
+  _notFound() {
+    this.app.use((req, res, next) => {
+      const err = new Error("Not Found");
       err.status = 404;
       err.code = 404;
       next(err);
     });
   }
-  
-  _swaggerConfig(){
-    this.app.use(
-      config.swagger.path,
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
+
+  _swaggerConfig() {
+    this.app.use(swagger.path, serve, setup(swaggerDocument));
   }
 
-  _errorHandler(){
-    this.app.use((err,req,res,next)=>{
-    const code = err.code || 500;
+  _errorHandler() {
+    this.app.use((err, req, res, next) => {
+      const code = err.code || 500;
       res.status(code);
       const body = {
-        error:{
+        error: {
           code,
-          message:err.message,
-          detail:err.data
-        }
-      }
+          message: err.message,
+          detail: err.data,
+        },
+      };
       res.json(body);
     });
   }
 
-  async start(){
-    this.app.listen(this.port,(error) =>{
-      if(error){
-        logger.error(error)
+  async start() {
+    this.app.listen(this.port, (error) => {
+      if (error) {
+        _error(error);
         process.exit(1);
         return;
       }
     });
   }
 }
-
-module.exports = ExpressServer;
