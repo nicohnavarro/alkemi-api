@@ -6,7 +6,7 @@ import logger from "./logger/index.js";
 const startLoader = async () => {
   try {
     await sequelize.authenticate();
-    sequelize.sync({ alter: true });
+    sequelize.sync({ force: true });
     logger.info("Database Loaded and Connected");
 
     const server = new ExpressServer();
