@@ -1,6 +1,6 @@
 import pkg from "sequelize";
 import sequelize from "../loaders/sequelize/index.js";
-import Movie from "./movie.js";
+// import Movie from "./movie.js";
 const { DataTypes } = pkg;
 
 const GenderType = sequelize.define("genderTypes", {
@@ -8,11 +8,8 @@ const GenderType = sequelize.define("genderTypes", {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
+},{
+  timestamps: false
 });
-
-GenderType.hasMany(Movie, {
-  foreignKey: 'genderTypeId',
-  sourceKey: 'id',
-})
 
 export default GenderType;

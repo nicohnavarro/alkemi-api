@@ -1,4 +1,3 @@
-import express from 'express';
 import { findAll, findWithPagination, findById, save, update, remove } from '../services/userService.js';
 import Success from '../handlers/successHandler.js';
 

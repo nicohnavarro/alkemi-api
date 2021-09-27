@@ -2,11 +2,13 @@ import { ExpressServer } from "./server/expressServer.js";
 import sequelize from "./sequelize/index.js";
 import { port } from "../config/index.js";
 import logger from "./logger/index.js";
+import relations from "../models/relations.js";
 
 const startLoader = async () => {
   try {
     await sequelize.authenticate();
-    sequelize.sync({ force: true });
+    relations();
+    sequelize.sync({ alter: true });
     logger.info("Database Loaded and Connected");
 
     const server = new ExpressServer();

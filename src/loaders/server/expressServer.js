@@ -3,9 +3,11 @@ import { join } from "path";
 import { serve, setup } from "swagger-ui-express";
 import morgan from "morgan";
 import { port, api, swagger } from "../../config/index.js";
-import swaggerDocument from '../swagger/swagger.json';
-import authRoutes from '../../routes/auth.js'
-import userRoutes from '../../routes/users.js'
+import swaggerDocument from "../swagger/swagger.json";
+import authRoutes from "../../routes/auth.js";
+import userRoutes from "../../routes/users.js";
+import characterRoutes from "../../routes/characters.js";
+import movieRoutes from "../../routes/movies.js";
 
 export class ExpressServer {
   constructor() {
@@ -37,8 +39,9 @@ export class ExpressServer {
     });
 
     this.app.use(`${this.basePath}/auth`, authRoutes);
-
-    this.app.use(`${this.basePath}/users`,userRoutes);
+    this.app.use(`${this.basePath}/users`, userRoutes);
+    this.app.use(`${this.basePath}/characters`, characterRoutes);
+    this.app.use(`${this.basePath}/movies`, movieRoutes);
   }
 
   _notFound() {
