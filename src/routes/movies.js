@@ -11,9 +11,9 @@ import {
 const routes = Router();
 
 routes.get("/", getAllMovies);
-routes.get("/:id",getMovieById);
+routes.get("/:id(\\d+)/",getMovieById);
 routes.post("/", createMovie);
-routes.put("/:id",updateMovie);
-routes.delete("/:id",deleteMovie);
+routes.put("/:id(\\d+)/",updateMovie);
+routes.delete("/:id(\\d+)/",deleteMovie);
 
 export default routes;

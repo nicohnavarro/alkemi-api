@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 import {
   getAllCharacters,
@@ -17,10 +17,10 @@ import {
 
 const routes = Router();
 
-routes.get("/", getAllCharacters);
-routes.get("/:id",getCharacterById);
-routes.post("/",postRequestValidations ,createCharacter);
-routes.put("/:id",updateCharacter);
-routes.delete("/:id",deleteCharacter);
+routes.get("/", getRequestValidations, getAllCharacters);
+routes.get("/:id(\\d+)/", getRequestValidations, getCharacterById);
+routes.post("/", postRequestValidations, createCharacter);
+routes.put("/:id(\\d+)/", putRequestValidations, updateCharacter);
+routes.delete("/:id(\\d+)/", deleteRequestValidations, deleteCharacter);
 
 export default routes;

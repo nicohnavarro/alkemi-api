@@ -1,16 +1,14 @@
 import { check, validationResult } from "express-validator";
 import AppError from "../../errors/appError.js";
-import { findByName } from "../../services/characterService.js";
+import { findByTitle } from "../../services/movieService.js";
 import { validJWT, hasRole } from "../auth/index.js";
 import { ADMIN_ROLE, USER_ROLE, ROLES } from "../../constants/index.js";
 
-const _nameRequired = check("name", "Name required").not().isEmpty();
+const _titleRequired = check("title", "Title required").not().isEmpty();
 
-const _historyRequired = check("history", "History required").not().isEmpty();
+const _calificationIsNumeric = check("calification", "Calification has to be a number").optional().isNumeric();
 
-const _ageIsNumeric = check("age", "Age required").isNumeric();
-
-const _weightIsNumeric = check("weight", "Weight required").isNumeric();
+const _dateValid = check("creationDate","Creation date error format").isDate("MM-DD-YYYY");
 
 const _roleValid = check("role")
   .optional()
@@ -28,10 +26,10 @@ const _validationResult = (req, res, next) => {
   next();
 };
 
-const _nameExist = check("name").custom(async (name = "") => {
-  const characterFound = await findByName(name);
-  if (characterFound) {
-    throw new AppError("Character already exist", 400);
+const _titleExist = check("title").custom(async (title = "") => {
+  const movieFound = await findByTitle(title);
+  if (movieFound) {
+    throw new AppError("Movie already exist", 400);
   }
 });
 
@@ -41,11 +39,10 @@ const _idIsNumeric = check("id").isNumeric();
 const postRequestValidations = [
   validJWT,
   hasRole(ADMIN_ROLE),
-  _nameRequired,
-  _nameExist,
-  _ageIsNumeric,
-  _weightIsNumeric,
-  _historyRequired,
+  _titleRequired,
+  _titleExist,
+  _calificationIsNumeric,
+  _dateValid,
   _roleValid,
   _validationResult,
 ];
@@ -54,9 +51,10 @@ const putRequestValidations = [
   validJWT,
   hasRole(ADMIN_ROLE, USER_ROLE),
   _idIsNumeric,
-  _nameExist,
-  _ageIsNumeric,
-  _weightIsNumeric,
+  _titleRequired,
+  _titleExist,
+  _calificationIsNumeric,
+  _dateValid,
   _roleValid,
   _validationResult,
 ];

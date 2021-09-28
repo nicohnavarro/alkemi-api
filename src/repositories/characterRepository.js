@@ -17,15 +17,16 @@ class CharacterRepository {
   }
 
   async save(character) {
-    try{
+    try {
       return await Character.create(character);
-    }
-    catch(err){
+    } catch (err) {
       throw new AppError("Already save", 400);
     }
   }
 
   async update(id, character) {
+    console.log(id);
+    console.log(character);
     return await Character.update(character, {
       where: {
         id,

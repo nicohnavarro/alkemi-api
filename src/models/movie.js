@@ -7,7 +7,7 @@ const { DataTypes } = pkg;
 const Movie = sequelize.define("movies", {
   image: {
     type: DataTypes.STRING(250),
-    allowNull: false,
+    allowNull: true,
   },
   title: {
     type: DataTypes.STRING(50),

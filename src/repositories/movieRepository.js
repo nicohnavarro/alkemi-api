@@ -11,6 +11,10 @@ class MovieRepository {
     return await Movie.findByPk(id);
   }
 
+  async findByTitle(id) {
+    return await Movie.findOne({ where: { title } });
+  }
+
   async save(movie) {
     return await Movie.create(movie);
   }
