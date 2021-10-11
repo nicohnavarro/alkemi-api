@@ -5,8 +5,8 @@ const repository = new MovieRepository();
 const genderTypeRepository = new GenderTypeRepository();
 const contentTypeRepository = new ContentTypeRepository();
 
-const findAll = async () => {
-  return await repository.findAll();
+const findAll = async (filter,options) => {
+  return await repository.findAll(filter,options);
 };
 
 const findById = async (id) => {

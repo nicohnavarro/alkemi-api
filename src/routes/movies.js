@@ -18,7 +18,7 @@ from '../middlewares/movie/index.js'
 
 const routes = Router();
 
-routes.get("/",getRequestValidations,getAllMovies);
+routes.get("/",getAllMovies);
 routes.get("/:id(\\d+)/",getRequestValidations,getMovieById);
 routes.post("/",postRequestValidations, createMovie);
 routes.put("/:id(\\d+)/",putRequestValidations,updateMovie);
