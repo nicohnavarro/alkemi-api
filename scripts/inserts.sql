@@ -1,5 +1,5 @@
-USE alkemy_db
-
+-- USE alkemy_db;
+USE heroku_eb6b7ebe41fd2a4;
 INSERT INTO contentTypes (description) VALUES ("MOVIE");
 INSERT INTO contentTypes (description) VALUES ("SERIE");
 

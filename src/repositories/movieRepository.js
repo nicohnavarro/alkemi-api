@@ -11,7 +11,7 @@ class MovieRepository {
     return await Movie.findByPk(id);
   }
 
-  async findByTitle(id) {
+  async findByTitle(title) {
     return await Movie.findOne({ where: { title } });
   }
 
@@ -20,6 +20,7 @@ class MovieRepository {
   }
 
   async update(id, movie) {
+    console.log(movie);
     return await Movie.update(movie, {
       where: {
         id,
