@@ -3,6 +3,9 @@ import AppError from "../../errors/appError.js";
 import { findByName } from "../../services/characterService.js";
 import { validJWT, hasRole } from "../auth/index.js";
 import { ADMIN_ROLE, USER_ROLE, ROLES } from "../../constants/index.js";
+import { imageRequired } from "../common.js";
+import multer from "multer";
+const upload = multer();
 
 const _nameRequired = check("name", "Name required").not().isEmpty();
 
@@ -27,6 +30,15 @@ const _validationResult = (req, res, next) => {
   }
   next();
 };
+
+const _idExist = check('id').custom(
+  async (id = '') => {
+      const cFound = await characterService.findById(id);
+      if(!cFound) {
+          throw new AppError('The id does not exist in DB', 400);
+      }
+  }
+);
 
 const _nameExist = check("name").custom(async (name = "") => {
   const characterFound = await findByName(name);
@@ -75,9 +87,21 @@ const getRequestValidations = [
   _validationResult,
 ];
 
+const postImageRequestValidations = [
+  validJWT,
+  hasRole(USER_ROLE, ADMIN_ROLE),
+  upload.single('image'),
+  _idRequired,
+  _idIsNumeric,
+  _idExist,
+  imageRequired,
+  validationResult
+]
+
 export {
   postRequestValidations,
   putRequestValidations,
   deleteRequestValidations,
   getRequestValidations,
+  postImageRequestValidations
 };

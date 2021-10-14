@@ -1,6 +1,4 @@
 import { Router } from "express";
-import multer from "multer";
-const upload = multer();
 import {
   getAllCharacters,
   getCharacterById,
@@ -15,6 +13,7 @@ import {
   putRequestValidations,
   deleteRequestValidations,
   getRequestValidations,
+  postImageRequestValidations,
 } from "../middlewares/character/index.js";
 
 const routes = Router();
@@ -24,6 +23,6 @@ routes.get("/:id(\\d+)/", getRequestValidations, getCharacterById);
 routes.post("/", postRequestValidations, createCharacter);
 routes.put("/:id(\\d+)/", putRequestValidations, updateCharacter);
 routes.delete("/:id(\\d+)/", deleteRequestValidations, deleteCharacter);
-routes.post("/image", upload.single("image"), uploadImage);
+routes.post("/image", postImageRequestValidations, uploadImage);
 
 export default routes;

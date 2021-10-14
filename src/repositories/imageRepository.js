@@ -33,7 +33,7 @@ class ImageRepository {
     Key = Key.split('/')[3];
     return new Promise((resolve, reject)=> {
         const params = {
-            Bucket: config.aws.s3BucketName,
+            Bucket: aws.s3BucketName,
             Key
         };
         console.log(params);
