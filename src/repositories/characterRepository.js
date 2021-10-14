@@ -1,11 +1,48 @@
 import AppError from "../errors/appError.js";
 import Character from "../models/character.js";
+import Sequelize from "sequelize";
+const { Op } = Sequelize;
 
 class CharacterRepository {
   constructor() {}
 
-  async findAll() {
-    return await Character.findAll();
+  async findAll(
+    { name = "", age = "",weight="", movieTitle = "" },
+    { offset, limit, order }
+  ) {
+    let where = {};
+
+    if (name) {
+      where.name = {
+        [Op.like]: `%${name}%`,
+      };
+    }
+    if (age) {
+      where.age = {
+        [Op.eq]: age,
+      };
+    }
+    if (weight) {
+      where.weight = {
+        [Op.eq]: weight,
+      };
+    }
+    // if (movieTitle) {
+    //   where.movieTitle = {
+    //     [Op.like]: `%${movieTitle}%`,
+    //   };
+    // }
+
+    let config = {
+      where,
+      attributes: ["name", "age", "weight"],
+      order: "",
+    };
+    if (order) {
+      config.order = [order.split(";")];
+    }
+    console.log(config);
+    return await Character.findAll(config);
   }
 
   async findById(id) {

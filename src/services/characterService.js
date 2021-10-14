@@ -1,8 +1,8 @@
 import CharacterRepository from '../repositories/characterRepository.js';
 const repository = new CharacterRepository();
 
-const findAll = async() => {
-  return await repository.findAll();
+const findAll = async(filter,options) => {
+  return await repository.findAll(filter,options);
 }
 
 const findById = async(id) => {

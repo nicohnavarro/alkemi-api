@@ -15,7 +15,7 @@ const Movie = sequelize.define("movies", {
     unique: true,
   },
   creationDate: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false,
   },
   calification: {

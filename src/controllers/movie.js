@@ -15,7 +15,8 @@ import LoggerInstance from "../loaders/logger/index.js";
 const getAllMovies = async (req, res, next) => {
   try {
     LoggerInstance.info("Query: " + JSON.stringify(req.query));
-    const movies = await findAll(req.query.filter,req.query.options);
+    const {filter={},options={}} = req.query; 
+    const movies = await findAll(filter,options);
     res.status(200).json(new Success(movies));
   } catch (err) {
     next(err);
