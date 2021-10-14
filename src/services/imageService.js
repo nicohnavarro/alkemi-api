@@ -7,6 +7,7 @@ const movieRepository = new MovieRepository();
 
 const uploadCharacterImage = async (idCharacter, file) => {
   const character = await characterRepository.findById(idCharacter);
+  console.log(character);
   if (character.image) {
     await imageRepository.deleteImage(character.image);
   }

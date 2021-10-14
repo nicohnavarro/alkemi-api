@@ -4,6 +4,9 @@ import MovieRepository from "../repositories/movieRepository.js";
 const repository = new MovieRepository();
 const genderTypeRepository = new GenderTypeRepository();
 const contentTypeRepository = new ContentTypeRepository();
+import ImageRepository from "../repositories/imageRepository.js";
+const imageRepository = new ImageRepository();
+
 
 const findAll = async (filter,options) => {
   return await repository.findAll(filter,options);
@@ -18,7 +21,6 @@ const findByTitle = async (title) => {
 };
 
 const save = async (movie) => {
-  console.log(movie);
   const genderType = await genderTypeRepository.findByDescription(
     movie.genderType
   );
@@ -47,6 +49,8 @@ const update = async (id, movie) => {
 };
 
 const remove = async (id) => {
+  const movie = await repository.findById(id);
+  imageRepository.deleteImage(movie.image);
   return await repository.remove(id);
 };
 

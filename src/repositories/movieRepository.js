@@ -53,7 +53,6 @@ class MovieRepository {
   }
 
   async update(id, movie) {
-    console.log(movie);
     return await Movie.update(movie, {
       where: {
         id,

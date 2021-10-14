@@ -14,7 +14,6 @@ const _emailRequired = check("email", "Email required").not().isEmpty();
 const _emailValid = check("email", "Email invalid").isEmail();
 const _emailExist = check("email").custom(async (email = "") => {
   const userFound = await findByEmail(email);
-  console.log("validation", userFound);
   if (userFound) {
     throw new AppError("Email already exist", 400);
   }

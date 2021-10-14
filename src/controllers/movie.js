@@ -7,6 +7,7 @@ import {
 } from "../services/movieService.js";
 import Success from "../handlers/successHandler.js";
 import LoggerInstance from "../loaders/logger/index.js";
+import { uploadMovieImage } from "../services/imageService.js";
 /**
  *
  * @params {express.Request} req
@@ -65,4 +66,22 @@ const deleteMovie = async (req, res, next) => {
   }
 };
 
-export { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie };
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+ const uploadImage = async (req, res, next) => {
+  try {
+
+      const movieId = req.body.id;
+      const image = req.file;
+
+      res.json(new Success(await uploadMovieImage(movieId, image)));
+  } catch (err) {
+      next(err);
+  }
+};
+
+
+export { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie,uploadImage };

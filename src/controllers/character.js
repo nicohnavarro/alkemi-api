@@ -76,7 +76,7 @@ const deleteCharacter = async (req, res, next) => {
 
       const characterId = req.body.id;
       const image = req.file;
-      console.log(req.file)
+      console.log(characterId)
 
       res.json(new Success(await uploadCharacterImage(characterId, image)));
   } catch (err) {

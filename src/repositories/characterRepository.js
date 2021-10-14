@@ -41,7 +41,6 @@ class CharacterRepository {
     if (order) {
       config.order = [order.split(";")];
     }
-    console.log(config);
     return await Character.findAll(config);
   }
 
@@ -62,8 +61,6 @@ class CharacterRepository {
   }
 
   async update(id, character) {
-    console.log(id);
-    console.log(character);
     return await Character.update(character, {
       where: {
         id,

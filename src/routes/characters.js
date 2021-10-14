@@ -23,6 +23,6 @@ routes.get("/:id(\\d+)/", getRequestValidations, getCharacterById);
 routes.post("/", postRequestValidations, createCharacter);
 routes.put("/:id(\\d+)/", putRequestValidations, updateCharacter);
 routes.delete("/:id(\\d+)/", deleteRequestValidations, deleteCharacter);
-routes.post("/image", postImageRequestValidations, uploadImage);
+routes.post("/image",postImageRequestValidations, uploadImage);
 
 export default routes;
