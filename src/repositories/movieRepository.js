@@ -50,8 +50,10 @@ class MovieRepository {
       include: [
         {
           model: Character,
-          as: "character",
+          as: "characters",
         },
+        'genderType',
+        'contentType'
       ],
     });
   }

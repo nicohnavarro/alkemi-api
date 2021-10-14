@@ -7,7 +7,7 @@ import CharacterMovie from "./characterMovie.js";
 const relations = () => {
   Movie.belongsToMany(Character, {
     through: CharacterMovie,
-    as: "character",
+    as: "characters",
     foreignKey: "movieId",
   });
 

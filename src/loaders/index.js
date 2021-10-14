@@ -8,7 +8,7 @@ const startLoader = async () => {
   try {
     await sequelize.authenticate();
     relations();
-    // sequelize.sync({ alter: true });
+    sequelize.sync({ alter: true });
     logger.info("Database Loaded and Connected");
 
     const server = new ExpressServer();
