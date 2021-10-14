@@ -8,12 +8,12 @@ import ImageRepository from "../repositories/imageRepository.js";
 const imageRepository = new ImageRepository();
 
 
-const findAll = async (filter,options) => {
-  return await repository.findAll(filter,options);
+const findAll = async (filter, options) => {
+  return await repository.findAll(filter, options);
 };
 
 const findById = async (id) => {
-  return await repository.findById(id);
+  return await repository.findByIdWithCharacter(id);
 };
 
 const findByTitle = async (title) => {
@@ -54,4 +54,8 @@ const remove = async (id) => {
   return await repository.remove(id);
 };
 
-export { findAll, findById, findByTitle, save, update, remove };
+const associate = async (movie, character) => {
+  return await movie.addCharacter(character);
+};
+
+export { findAll, findById, findByTitle, save, update, remove, associate };

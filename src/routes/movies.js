@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 import {
   getAllMovies,
@@ -6,7 +6,8 @@ import {
   createMovie,
   updateMovie,
   deleteMovie,
-  uploadImage
+  uploadImage,
+  associateCharacter,
 } from "../controllers/movie.js";
 
 import {
@@ -14,17 +15,23 @@ import {
   putRequestValidations,
   getRequestValidations,
   deleteRequestValidations,
-  postImageRequestValidations
-}
-from '../middlewares/movie/index.js'
+  postImageRequestValidations,
+  asociationRequestValidations,
+} from "../middlewares/movie/index.js";
 
 const routes = Router();
 
-routes.get("/",getAllMovies);
-routes.get("/:id(\\d+)/",getRequestValidations,getMovieById);
-routes.post("/",postRequestValidations, createMovie);
-routes.put("/:id(\\d+)/",putRequestValidations,updateMovie);
-routes.delete("/:id(\\d+)/",deleteRequestValidations,deleteMovie);
-routes.post("/image",postImageRequestValidations, uploadImage);
+routes.get("/", getAllMovies);
+routes.get("/:id(\\d+)/", getRequestValidations, getMovieById);
+routes.post("/", postRequestValidations, createMovie);
+routes.put("/:id(\\d+)/", putRequestValidations, updateMovie);
+routes.delete("/:id(\\d+)/", deleteRequestValidations, deleteMovie);
+routes.post("/image", postImageRequestValidations, uploadImage);
+
+routes.put(
+  "/:idMovie(\\d+)/characters/:idCharacter(\\d+)/",
+  asociationRequestValidations,
+  associateCharacter
+);
 
 export default routes;

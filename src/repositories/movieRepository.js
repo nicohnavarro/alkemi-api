@@ -1,6 +1,7 @@
 import Sequelize from "sequelize";
 const { Op } = Sequelize;
 import Movie from "../models/movie.js";
+import Character from "../models/character.js";
 import { format } from "date-fns";
 import { parseISO } from "date-fns";
 
@@ -42,6 +43,17 @@ class MovieRepository {
 
   async findById(id) {
     return await Movie.findByPk(id);
+  }
+
+  async findByIdWithCharacter(id) {
+    return await Movie.findByPk(id, {
+      include: [
+        {
+          model: Character,
+          as: "character",
+        },
+      ],
+    });
   }
 
   async findByTitle(title) {

@@ -6,13 +6,14 @@ import { ADMIN_ROLE, USER_ROLE, ROLES } from "../../constants/index.js";
 import ContentTypeRepository from "../../repositories/contentTypeRepository.js";
 import GenderTypeRepository from "../../repositories/genderTypeRepository.js";
 import MovieRepository from "../../repositories/movieRepository.js";
-
+import CharacterRepository from "../../repositories/characterRepository.js";
 import { imageRequired } from "../common.js";
 import multer from "multer";
 
 const genderTypeRepository = new GenderTypeRepository();
 const contentTypeRepository = new ContentTypeRepository();
 const movieRepository = new MovieRepository();
+const characterRepository = new CharacterRepository();
 const upload = multer();
 
 const _titleOptional = check("title").optional();
@@ -68,9 +69,6 @@ const _titleExist = check("title").custom(async (title = "") => {
   }
 });
 
-const _idRequired = check("id").not().isEmpty();
-const _idIsNumeric = check("id").isNumeric();
-
 const _contentTypeExistValidation = async (contentType = "") => {
   try {
     const contentTypeFound = await contentTypeRepository.findByDescription(
@@ -91,6 +89,13 @@ const _idExist = check("id").custom(async (id = "") => {
   }
 });
 
+const _idRequired = (name) => {
+  return check(name).not().isEmpty();
+}
+const _idIsNumeric = (name) => {
+  return check(name).isNumeric();
+}
+
 const _genderTypeExistValidation = async (genderType = "") => {
   try {
     const genderTypeFound = await genderTypeRepository.findByDescription(
@@ -103,6 +108,27 @@ const _genderTypeExistValidation = async (genderType = "") => {
     throw new AppError("The gender type does not exist in DB", 400);
   }
 };
+
+const _idCharacterExist = check('idCharacter').custom(
+  async (idCharacter = '', {req}) => {
+      const cFound = await characterRepository.findById(idCharacter);
+      if(!cFound) {
+          throw new AppError('The character id does not exist in DB', 400);
+      }
+      req.character = cFound;
+  }
+);
+
+
+const _idMovieExist = check('idMovie').custom(
+  async (idMovie = '', {req}) => {
+      const mFound = await movieRepository.findById(idMovie);
+      if (!mFound) {
+          throw new AppError('The movie id does not exist in DB', 400);
+      }
+      req.movie = mFound;
+  }
+);
 
 const _contentTypeExist = check("contentType").custom(
   _contentTypeExistValidation
@@ -131,7 +157,8 @@ const postRequestValidations = [
 const putRequestValidations = [
   validJWT,
   hasRole(ADMIN_ROLE, USER_ROLE),
-  _idIsNumeric,
+  _idRequired('id'),
+  _idIsNumeric('id'),
   _titleOptional,
   _titleNotExist,
   _calificationIsNumeric,
@@ -145,8 +172,8 @@ const putRequestValidations = [
 const deleteRequestValidations = [
   validJWT,
   hasRole(ADMIN_ROLE),
-  _idRequired,
-  _idIsNumeric,
+  _idRequired('id'),
+  _idIsNumeric('id'),
   _validationResult,
 ];
 
@@ -160,11 +187,23 @@ const postImageRequestValidations = [
   validJWT,
   hasRole(USER_ROLE, ADMIN_ROLE),
   upload.single("image"),
-  _idRequired,
-  _idIsNumeric,
+  _idRequired('id'),
+  _idIsNumeric('id'),
   _idExist,
   imageRequired,
   _validationResult,
+];
+
+const asociationRequestValidations =[
+  validJWT,
+  hasRole(ADMIN_ROLE),
+  _idRequired('idCharacter'),
+  _idIsNumeric('idCharacter'),
+  _idCharacterExist,
+  _idRequired('idMovie'),
+  _idIsNumeric('idMovie'),
+  _idMovieExist,
+  _validationResult
 ];
 
 export {
@@ -172,5 +211,6 @@ export {
   putRequestValidations,
   deleteRequestValidations,
   getRequestValidations,
-  postImageRequestValidations
+  postImageRequestValidations,
+  asociationRequestValidations
 };

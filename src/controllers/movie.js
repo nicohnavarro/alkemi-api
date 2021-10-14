@@ -4,6 +4,7 @@ import {
   save,
   update,
   remove,
+  associate
 } from "../services/movieService.js";
 import Success from "../handlers/successHandler.js";
 import LoggerInstance from "../loaders/logger/index.js";
@@ -16,8 +17,8 @@ import { uploadMovieImage } from "../services/imageService.js";
 const getAllMovies = async (req, res, next) => {
   try {
     LoggerInstance.info("Query: " + JSON.stringify(req.query));
-    const {filter={},options={}} = req.query; 
-    const movies = await findAll(filter,options);
+    const { filter = {}, options = {} } = req.query;
+    const movies = await findAll(filter, options);
     res.status(200).json(new Success(movies));
   } catch (err) {
     next(err);
@@ -67,21 +68,42 @@ const deleteMovie = async (req, res, next) => {
 };
 
 /**
- * 
- * @param {express.Request} req 
- * @param {express.Response} res 
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
- const uploadImage = async (req, res, next) => {
+const uploadImage = async (req, res, next) => {
   try {
+    const movieId = req.body.id;
+    const image = req.file;
 
-      const movieId = req.body.id;
-      const image = req.file;
-
-      res.json(new Success(await uploadMovieImage(movieId, image)));
+    res.json(new Success(await uploadMovieImage(movieId, image)));
   } catch (err) {
-      next(err);
+    next(err);
   }
 };
 
+/**
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const associateCharacter = async (req, res, next) => {
+  try {
+    const movie = req.movie;
+    const character = req.character;
+    res.json(new Success(await associate(movie, character)));
+  } catch (err) {
+    next(err);
+  }
+};
 
-export { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie,uploadImage };
+export {
+  getAllMovies,
+  getMovieById,
+  createMovie,
+  updateMovie,
+  deleteMovie,
+  uploadImage,
+  associateCharacter,
+};
