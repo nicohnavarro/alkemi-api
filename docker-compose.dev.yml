@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  node-alkemy-app:
+    build:
+      context: .
+      args: 
+        NODE_ENV: development
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    env_file:
+      - ./.env

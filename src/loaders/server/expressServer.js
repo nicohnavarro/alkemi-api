@@ -22,6 +22,8 @@ export class ExpressServer {
 
     this._notFound();
     this._errorHandler();
+
+    console.log(this.basePath);
   }
 
   _middlewares() {
@@ -30,6 +32,11 @@ export class ExpressServer {
   }
 
   _routes() {
+    this.app.get("/", (req, res) => {
+      res.send("<h2>Hello Alkemy!!</h2>");
+    });
+
+
     this.app.head("/status", (req, res) => {
       res.status(200).end();
     });

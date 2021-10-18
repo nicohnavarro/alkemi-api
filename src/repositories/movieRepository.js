@@ -48,10 +48,7 @@ class MovieRepository {
   async findByIdWithCharacter(id) {
     return await Movie.findByPk(id, {
       include: [
-        {
-          model: Character,
-          as: "characters",
-        },
+        "characters",
         'genderType',
         'contentType'
       ],

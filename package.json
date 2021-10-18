@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon --experimental-json-modules src",
-    "start": "node src",
+    "dev": "npx nodemon  -L --experimental-json-modules src",
+    "start": "node --experimental-json-modules src",
     "test": "node ./postman/newman",
     "prepare": "husky install",
     "lint-staged": "lint-staged"
